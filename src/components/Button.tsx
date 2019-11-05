@@ -4,35 +4,54 @@ import { theme } from "../styles"
 
 type Props = {
   children: string
-  color: "red" | "green"
+  bgColor: "red" | "green"
   isDisabled: boolean
   buttonType: "small" | "big"
+  isReverse: boolean
 }
 
 export const Button = (props: Props) => {
+  const { isReverse, isDisabled, buttonType, children, bgColor } = props
   return (
     <StyledButton
-      color={props.color}
-      isDisabled={props.isDisabled}
-      disabled={props.isDisabled}
-      buttonType={props.buttonType}
+      bgColor={bgColor}
+      isDisabled={isDisabled}
+      disabled={isDisabled}
+      buttonType={buttonType}
+      isReverse={isReverse}
     >
-      {props.children}
+      {children}
     </StyledButton>
   )
 }
 
-const getButtonColor = (color: string, isDisabled: boolean) => {
-  if (color === "green" && !isDisabled) {
+const getButtonBgColor = (color: string, isDisabled: boolean, isReverse: boolean) => {
+  if (color === "green" && !isDisabled && !isReverse) {
     return theme.green.middle
-  } else if (color === "green" && isDisabled) {
+  } else if (color === "green" && isDisabled && !isReverse) {
     return theme.green.light
-  } else if (color === "red" && !isDisabled) {
+  } else if (color === "red" && !isDisabled && !isReverse) {
     return theme.red.middle
-  } else if (color === "red" && isDisabled) {
+  } else if (color === "red" && isDisabled && !isReverse) {
     return theme.red.light
+  } else if ((color === "red" || "green") && (isDisabled || !isDisabled) && isReverse) {
+    return theme.white
   }
 }
+const getButtonColor = (color: string, isDisabled: boolean, isReverse: boolean) => {
+  if (color === "green" && !isDisabled && isReverse) {
+    return theme.green.middle
+  } else if (color === "green" && isDisabled && isReverse) {
+    return theme.green.light
+  } else if (color === "red" && !isDisabled && isReverse) {
+    return theme.red.middle
+  } else if (color === "red" && isDisabled && isReverse) {
+    return theme.red.light
+  } else if ((color === "green" || "red") && (!isDisabled || isDisabled) && !isReverse) {
+    return theme.white
+  }
+}
+
 const getButtonHeight = (buttonType: string): string => {
   switch (buttonType) {
     case "small":
@@ -64,18 +83,81 @@ const getButtonBorderRadius = (buttonType: string): string => {
       return "25px"
   }
 }
+const getHoverColor = (color: string, isDisabled: boolean, isReverse: boolean) => {
+  if (color === "red" && !isDisabled && !isReverse) {
+    return theme.red.dark
+  } else if (color === "green" && !isDisabled && !isReverse) {
+    return theme.green.dark
+  } else if ((color === "red" || "green") && (isDisabled || !isDisabled) && isReverse) {
+    return "none"
+  }
+}
 
-const StyledButton = styled.button<{ color: string; isDisabled: boolean; buttonType: string }>`
-  text-align: center;
+const getBorder = (isReverse: boolean, color: string, isDisabled: boolean) => {
+  if (isReverse && color === "red" && !isDisabled) {
+    return `1px solid ${theme.red.middle}`
+  } else if (isReverse && color === "red" && isDisabled) {
+    return `1px solid ${theme.red.light}`
+  } else if (isReverse && color === "green" && !isDisabled) {
+    return `1px solid ${theme.green.middle}`
+  } else if (isReverse && color === "green" && isDisabled) {
+    return `1px solid ${theme.green.light}`
+  } else {
+    return "none"
+  }
+}
+
+const StyledButton = styled.button<{
+  bgColor: "red" | "green"
+  isDisabled: boolean
+  buttonType: string
+  isReverse: boolean
+}>`text-align: center;
   display: block;
-  width: 234px;
+  min-width: 234px;
   height: ${props => getButtonHeight(props.buttonType)};
   border-radius: ${props => getButtonBorderRadius(props.buttonType)};
-  background-color: ${props => getButtonColor(props.color, props.isDisabled)};
-  color: #ffffff;
+  background-color: ${props => getButtonBgColor(props.bgColor, props.isDisabled, props.isReverse)};
+  color: ${props => getButtonColor(props.bgColor, props.isDisabled, props.isReverse)};
+  /**
+  TODO: border, color
+   */
+  :hover {
+    background-color: ${props => getHoverColor(props.bgColor, props.isDisabled, props.isReverse)}
+    border: ${props => {
+      if (props.bgColor === "red" && props.isReverse && !props.isDisabled) {
+        return `1px solid ${theme.red.dark}`
+      } else if (props.bgColor === "red" && props.isReverse && props.isDisabled) {
+        return `1px solid ${theme.red.light}`
+      } else if (props.bgColor === "green" && props.isReverse && !props.isDisabled) {
+        return `1px solid ${theme.green.dark}`
+      } else if (props.bgColor === "green" && props.isReverse && props.isDisabled) {
+        return `1px solid ${theme.green.light}`
+      } else {
+        return "none"
+      }
+    }}
+    color:${props => {
+      if (props.bgColor === "red" && props.isReverse && !props.isDisabled) {
+        return theme.red.dark
+      } else if (props.bgColor === "red" && props.isReverse && props.isDisabled) {
+        return theme.red.light
+      } else if (props.bgColor === "green" && props.isReverse && !props.isDisabled) {
+        return theme.green.dark
+      } else if (props.bgColor === "green" && props.isReverse && props.isDisabled) {
+        return theme.green.light
+      } else {
+        return theme.white
+      }
+    }}
+    
+    }
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
-  border: none;
+  /**
+  TODO fix border
+   */
+  border: ${props => getBorder(props.isReverse, props.bgColor, props.isDisabled)} ;
   cursor: ${props => (props.isDisabled ? "not-allowed" : "pointer")};
   padding: ${props => getButtonPadding(props.buttonType)};
 
