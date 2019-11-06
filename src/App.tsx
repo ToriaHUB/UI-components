@@ -1,12 +1,14 @@
 import React from "react"
 
 import "./App.css"
-import styled from "styled-components"
-
-import { Toggle } from "./components/Toggle"
+import { TextInput } from "./components/TextInput"
 
 function App() {
-  return <Toggle />
+  return (
+    <div>
+      <TextInput label={"Normal:"} isValidate={false} placeholder={"Type something"}></TextInput>
+    </div>
+  )
 }
 
 export default App
