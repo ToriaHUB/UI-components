@@ -6,12 +6,11 @@ type Props = {
 }
 
 export const PlusIcon = (props: Props) => {
-  const { size, color } = props
+  const { size } = props
   return (
     <svg
-      width={size === "big" ? "20px" : "10px"}
-      height={size === "big" ? "20px" : "10px"}
-      fill={props.color}
+      width={size === "big" ? "25px" : "15px"}
+      height={size === "big" ? "25px" : "15"}
       id="Layer_1"
       x="0px"
       y="0px"

@@ -3,7 +3,8 @@ import styled from "styled-components"
 import { theme } from "../styles"
 
 type Props = {
-  children: string
+  label: string
+  children?: React.ReactNode
   bgColor: "red" | "green"
   isDisabled: boolean
   buttonType: "small" | "big"
@@ -11,7 +12,7 @@ type Props = {
 }
 
 export const Button = (props: Props) => {
-  const { isReverse, isDisabled, buttonType, children, bgColor } = props
+  const { isReverse, isDisabled, buttonType, children, bgColor, label } = props
   return (
     <StyledButton
       bgColor={bgColor}
@@ -20,7 +21,7 @@ export const Button = (props: Props) => {
       buttonType={buttonType}
       isReverse={isReverse}
     >
-      {children}
+      {children} <Label>{label}</Label>
     </StyledButton>
   )
 }
@@ -92,8 +93,9 @@ const StyledButton = styled.button<{
   buttonType: string
   isReverse: boolean
 }>`
-  text-align: center;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 234px;
   height: ${props => getButtonHeight(props.buttonType)};
   border-radius: ${props => getButtonBorderRadius(props.buttonType)};
@@ -106,9 +108,20 @@ const StyledButton = styled.button<{
     background-color: ${props => getHoverColor(props.bgColor, props.isDisabled, props.isReverse)};
     border: 1px solid ${props => getBorderFontColorHover(props.bgColor, props.isDisabled, props.isReverse)};
     color: ${props => getBorderFontColorHover(props.bgColor, props.isDisabled, props.isReverse)};
+    svg {
+      fill: ${props =>
+        !props.isReverse ? theme.white : getBorderFontColorHover(props.bgColor, props.isDisabled, props.isReverse)};
+    }
   }
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   cursor: ${props => (props.isDisabled ? "not-allowed" : "pointer")};
   padding: ${props => getButtonPadding(props.buttonType)};
+  svg {
+    fill: ${props =>
+      !props.isReverse ? theme.white : getReverseButtonColor(props.bgColor, props.isDisabled, props.isReverse)};
+  }
+`
+const Label = styled.span`
+  padding-left: 5px;
 `
