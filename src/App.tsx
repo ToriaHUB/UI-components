@@ -1,17 +1,19 @@
 import React from "react"
 
 import "./App.css"
-import { TextInput } from "./components/TextInput"
+import { Input } from "./components/Input"
 
 function App() {
   return (
-    <div>
-      <TextInput label={"Normal:"} isValidate={false} placeholder={"Type something"}></TextInput>
+    <div style={{ width: "550px" }}>
+      <Input label={"Normal:"} isValidate={true} placeholder={"Type something"} warningMessage={"Warning notice"} />
     </div>
   )
 }
 
 export default App
+
+// TODO: Remove
 
 // const ColumnContainer = styled.div`
 //   display: grid;
